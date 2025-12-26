@@ -1,72 +1,114 @@
-# Project Setup
-1. Clone the repository
+# Admin Task Management System
 
-2. Create .env file in root directory and add below variables
+## Project Setup
+
+### 1. Clone the repository
+```bash
+git clone <repository-url>
+cd admin-task-management
+```
+
+### 2. Create `.env` file in root directory
+```env
 PORT=
 JWT_SECRET=
 DB_NAME=
 DB_USER=
 DB_PASSWORD=
 DB_HOST=
+```
 
-3. Install dependencies
+### 3. Install dependencies
+```bash
 npm i
+```
 
-4. Start the server
+### 4. Start the server
+```bash
 npm run dev
-Server will run at:  http://localhost:3000
+```
 
+### 5. Server URL
+```text
+http://localhost:3000
+```
 
+---
 
+## 1. Signup Endpoint
 
+### Endpoint
+```http
+POST /api/auth/signup
+```
 
-
-# 1. Signup Endpoint
-- POST  http://localhost:3000/api/auth/signup
+### Request Body
+```json
 {
+  "name": "kid5",
+  "email": "kid5@gmail.com",
+  "password": "1234567",
+  "role": "manager",
+  "gender": "male"
+}
+```
+
+### Response
+```json
+{
+  "message": "Signup successful.",
+  "user": {
+    "id": 6,
     "name": "kid5",
     "email": "kid5@gmail.com",
-    "password": "1234567",
-    "role": "manager",
-    "gender": "male"
+    "password": "$2b$10$lWrNz5Z4euBuKLqz2wulwu1MMjrk90.XYIVP7Hbk8sfkKR5fo3Q3e",
+    "gender": "male",
+    "role": "manager"
+  }
 }
+```
 
-o/p :
+---
+
+## 2. Login Endpoint
+
+### Endpoint
+```http
+POST /api/auth/login
+```
+
+### Request Body
+```json
 {
-    "message": "Signup successful.",
-    "user": {
-        "id": 6,
-        "name": "kid5",
-        "email": "kid5@gmail.com",
-        "password": "$2b$10$lWrNz5Z4euBuKLqz2wulwu1MMjrk90.XYIVP7Hbk8sfkKR5fo3Q3e",
-        "gender": "male",
-        "role": "manager"
-    }
+  "email": "kid4@gmail.com",
+  "password": "1234567"
 }
+```
 
-
-
-# 2. Login Endpoint
-- POST http://localhost:3000/api/auth/login
+### Response
+```json
 {
-    "email": "kid4@gmail.com",
-    "password": "1234567"
+  "message": "Login successful.",
+  "token": "JWT_TOKEN"
 }
+```
 
-o/p :
-{
-    "message": "Login successful.",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJraWQ0QGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NjcwODgxMSwiZXhwIjoxNzY2Nzk1MjExfQ.yGXSxhrVCTtKZ16JxhDXOQE9Hh2ijfp098mLdlqs3Zo"
-}
+---
 
+## 3. Create Task Endpoint
 
+### Headers
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
 
+### Endpoint
+```http
+POST /api/tasks
+```
 
-# 3. Create Task Endpoint
-- NOTE: Include this while hitting API
-  Authorization: Bearer <JWT_TOKEN>
-
-- POST http://localhost:3000/api/tasks
+### Request Body
+```json
 {
   "task_name": "Frontend Dashboard",
   "task_description": "Create admin dashboard UI",
@@ -74,32 +116,42 @@ o/p :
   "start_date": "2025-01-10",
   "end_date": "2025-01-20"
 }
+```
 
-o/p :
+### Response
+```json
 {
-    "message": "Task created successfully",
-    "data": {
-        "id": 1,
-        "task_name": "Frontend Dashboard",
-        "task_description": "Create admin dashboard UI",
-        "task_type": [
-            "a-task",
-            "c-task"
-        ],
-        "start_date": "2025-01-10",
-        "end_date": "2025-01-20",
-        "created_by": 5,
-        "updatedAt": "2025-12-26T00:27:01.130Z",
-        "createdAt": "2025-12-26T00:27:01.130Z"
-    }
+  "message": "Task created successfully",
+  "data": {
+    "id": 1,
+    "task_name": "Frontend Dashboard",
+    "task_description": "Create admin dashboard UI",
+    "task_type": ["a-task", "c-task"],
+    "start_date": "2025-01-10",
+    "end_date": "2025-01-20",
+    "created_by": 5,
+    "updatedAt": "2025-12-26T00:27:01.130Z",
+    "createdAt": "2025-12-26T00:27:01.130Z"
+  }
 }
+```
 
+---
 
+## 4. Get All Tasks
 
-# 4. Get All Tasks (super-admin / admin / manager / user)
-- GET http://localhost:3000/api/tasks
+### Roles Allowed
+```text
+super-admin, admin, manager, user
+```
 
-o/p :
+### Endpoint
+```http
+GET /api/tasks
+```
+
+### Response
+```json
 {
   "message": "Tasks fetched successfully",
   "count": 2,
@@ -117,3 +169,4 @@ o/p :
     }
   ]
 }
+```
